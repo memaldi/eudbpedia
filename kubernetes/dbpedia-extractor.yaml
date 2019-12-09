@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dbpedia-extractor
+  labels:
+    app: dbpedia-extractor
+spec:
+  template:
+    metadata:
+      labels:
+        app: dbpedia-extractor
+    spec:
+      containers:
+        - name: dbpedia-extractor
+          image: memaldi/eudbpedia-extractor
+          volumeMounts:
+            - mountPath: /dbpedia/dump
+              name: dbpedia-pvc
+              subPath: dump
+            - mountPath: /dbpedia/triples
+              name: dbpedia-pvc
+              subPath: triples
+            - mountPath: /dbpedia/config/download.eu.properties
+              name: dbpedia-config
+              subPath: download.eu.properties
+            - mountPath: /dbpedia/config/extraction.eu.properties
+              name: dbpedia-config
+              subPath: extraction.eu.properties
+      restartPolicy: Never
+      volumes:
+        - name: dbpedia-pvc
+          persistentVolumeClaim:
+            claimName: dbpedia-pvc
+        - name: dbpedia-config
+          configMap:
+            name: dbpedia-config
+            items:
+              - key: download.eu.properties
+                path: download.eu.properties
+              - key: extraction.eu.properties
+                path: extraction.eu.properties
+

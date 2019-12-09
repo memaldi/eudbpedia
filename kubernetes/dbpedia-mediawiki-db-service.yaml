@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dbpedia-mediawiki-db
+spec:
+  selector:
+    app: dbpedia-mediawiki-db
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306

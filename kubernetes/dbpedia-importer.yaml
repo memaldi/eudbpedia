@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dbpedia-importer
+  labels:
+    app: dbpedia-importer
+spec:
+  template:
+    metadata:
+      labels:
+        app: dbpedia-importer
+    spec:
+      containers:
+        - name: dbpedia-importer
+          image: dbpedia/virtuoso
+          command: ['/usr/local/sbin/start.sh']
+          args: ['import', 'http://eu.dbpedia.org']
+          volumeMounts:
+            - mountPath: /var/lib/virtuoso-opensource-7/set_registry_values.sql
+              name: dbpedia-config
+              subPath: set_registry_values.sql
+            - mountPath: /var/lib/virtuoso-opensource-7
+              name: dbpedia-pvc
+              subPath: db
+            - mountPath: /import
+              name: dbpedia-pvc
+              subPath: dump
+      restartPolicy: Never
+      volumes:
+        - configMap:
+          name: dbpedia-config
+          items:
+            - key: set_registry_values.sql
+              path: set_registry_values.sql
+        - name: dbpedia-pvc
+          persistentVolumeClaim:
+            claimName: dbpedia-pvc
+        

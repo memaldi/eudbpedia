@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dbpedia
+  labels:
+    app: dbpedia
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dbpedia
+  template:
+    metadata:
+      labels:
+        app: dbpedia
+    spec:
+      containers:
+        - name: dbpedia
+          image: dbpedia/virtuoso
+          env:
+            - name: NumberOfBuffers
+              valueFrom:
+                configMapKeyRef:
+                    key: NumberOfBuffers
+                    name: dbpedia-config
+          volumeMounts:
+            - mountPath: /var/lib/virtuoso-opensource-7
+              name: dbpedia-pvc
+              subPath: db
+            - mountPath: /var/lib/virtuoso-opensource-7/set_registry_values.sql
+              name: dbpedia-config
+              subPath: set_registry_values.sql
+            - mountPath: /import
+              name: dbpedia-pvc
+              subPath: dump
+      volumes:
+        - name: dbpedia-pvc
+          persistentVolumeClaim:
+            claimName: dbpedia-pvc
+        - configMap:
+          name: dbpedia-config
+          items:
+            - key: set_registry_values.sql
+              path: set_registry_values.sql

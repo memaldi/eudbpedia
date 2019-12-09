@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dbpedia-mediawiki-db
+  labels:
+    app: dbpedia-mediawiki-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dbpedia-mediawiki-db
+  template:
+    metadata:
+      labels:
+        app: dbpedia-mediawiki-db
+    spec:
+      containers:
+        - name: dbpedia-mediawiki-db
+          image: mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                    key: MYSQL_ROOT_PASSWORD
+                    name: dbpedia-secrets
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                    key: MYSQL_DATABASE
+                    name: dbpedia-secrets
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                    key: MYSQL_USER
+                    name: dbpedia-secrets
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                    key: MYSQL_PASSWORD
+                    name: dbpedia-secrets
+      volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: dbpedia-pvc
+          subPath: mediawiki-db

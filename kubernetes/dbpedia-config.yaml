@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dbpedia-config
+data:
+    download.eu.properties: |
+        # Default download server. It lists mirrors which may be faster.
+        base-url=https://dumps.wikimedia.org/
+        base-dir=/dbpedia/dump
+
+        dumpDir=/dbpedia/dump
+        # the source file name
+        # should be the same as in universal.properties
+        # source=pages-articles.xml.bz2
+
+        # language to download
+        languages=eu
+
+        # Unzip files while downloading? Not necessary, extraction will unzip on the fly. Let's save space.
+        unzip=false
+
+        # Sometimes connecting to the server fails, so we try five times with pauses of 10 seconds.
+        retry-max=5
+        retry-millis=10000
+
+        #for specific dump dates (e.g. 20170101) if empty: the most recent dump-date is used
+        dump-date=
+    extraction.eu.properties: |
+        # download and extraction target dir
+        #base-dir= moved to $extraction-framework/core/src/main/resources/universal.properties
+        base-dir=/dbpedia/dump
+        outputDir=/dbpedia/triples
+        # Source file. If source file name ends with .gz or .bz2, it is unzipped on the fly. 
+        # Must exist in the directory xxwiki/yyyymmdd and have the prefix xxwiki-yyyymmdd-
+        # where xx is the wiki code and yyyymmdd is the dump date.
+
+        # default:
+        #source=# moved to $extraction-framework/core/src/main/resources/universal.properties
+        # source=/dbpedia/dump
+
+        # use only directories that contain a 'download-complete' file? Default is false.
+        require-download-complete=false
+
+        # List of languages or article count ranges, e.g. 'en,de,fr' or '10000-20000' or '10000-', or '@mappings'
+        languages=eu
+
+        # extractor class names starting with "." are prefixed by "org.dbpedia.extraction.mappings"
+
+        extractors=.MappingExtractor
+
+        extractors.eu=.MappingExtractor,.DisambiguationExtractor,.HomepageExtractor,.ImageExtractorNew,.TopicalConceptsExtractor
+
+        # If we need to Exclude Non-Free Images in this Extraction, set this to true
+        copyrightCheck=false
+    set_registry_values.sql: |
+        # setting registry values
+
+        uptime();
+        registry_get_all();
+        registry_set('dbp_decode_iri','on');
+        registry_set('dbp_DynamicLocal', 'off');
+        registry_set('dbp_domain','http://eu.dbpedia.org');
+        registry_set('dbp_graph', 'http://eu.dbpedia.org');
+        registry_set('dbp_lang', 'eu');
+        registry_set('dbp_DynamicLocal', 'on');
+        registry_set('dbp_category', 'Kategoria');
+        registry_set('dbp_imprint', 'http://eu.dbpedia.org/index.php?title=Kontaktua');
+        registry_set('dbp_website','http://eu.dbpedia.org/');
+        registry_set('dbp_lhost', ':80');
+        registry_set('dbp_vhost','eu.dbpedia.org');
+        uptime();
+    NumberOfBuffers: '340000'
+
+

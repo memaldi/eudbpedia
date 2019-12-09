@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dbpedia-mediawiki
+  labels:
+    app: dbpedia-mediawiki
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dbpedia-mediawiki
+  template:
+    metadata:
+      labels:
+        app: dbpedia-mediawiki
+    spec:
+      containers:
+        - name: dbpedia-mediawiki
+          image: mediawiki
+          volumeMounts:
+            - mountPath: /var/www/html/images
+              name: dbpedia-pvc
+              subPath: mediawiki-images
+            - mountPath: /var/www/html/LocalSettings.php
+              name: dbpedia-secrets
+              subPath: LocalSettings.php
+      volumes:
+      - name: dbpedia-pvc
+        persistentVolumeClaim:
+          claimName: dbpedia-pvc
+      - name: dbpedia-secrets
+        secret:
+          secretName: dbpedia-secrets
+          items:
+            - key: LocalSettings.php
+              path: LocalSettings.php
