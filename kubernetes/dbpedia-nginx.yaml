@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dbpedia-nginx
+  labels:
+    app: dbpedia-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dbpedia-nginx
+  template:
+    metadata:
+      labels:
+        app: dbpedia-nginx
+    spec:
+      containers:
+        - name: dbpedia-nginx
+          image: nginx
+          volumeMounts:
+            - mountPath: /etc/nginx/nginx.conf
+              name: dbpedia-config
+              subPath: nginx.conf
+      volumes:
+        - name: dbpedia-config
+          configMap:
+            name: dbpedia-config
+            items:
+                - key: nginx.conf
+                  path: nginx.conf

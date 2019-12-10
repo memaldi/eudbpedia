@@ -70,5 +70,181 @@ data:
         registry_set('dbp_vhost','eu.dbpedia.org');
         uptime();
     NumberOfBuffers: '340000'
+    nginx.conf: |
+        user  nginx;
+        worker_processes  1;
+        
+        error_log  /var/log/nginx/error.log warn;
+        pid        /var/run/nginx.pid;
+        
+        
+        events {
+            worker_connections  1024;
+        }
+        
+        
+        http {
+            include       /etc/nginx/mime.types;
+            default_type  application/octet-stream;
+        
+            log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                            '$status $body_bytes_sent "$http_referer" '
+                            '"$http_user_agent" "$http_x_forwarded_for"';
+        
+            access_log  /var/log/nginx/access.log  main;
+        
+            sendfile        on;
+            #tcp_nopush     on;
+        
+            keepalive_timeout  65;
+        
+            #gzip  on;
+        
+            include /etc/nginx/conf.d/*.conf;
+            server {
+                listen 80;
+
+                server_name eudbpedia.apps.openshift.deustotech.eu;
+
+                location / {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia-mediawiki:80;
+                }
+
+                location /conductor {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/conductor;
+                }
+
+                location /category {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/category;
+                }
+                
+                location /class {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/class;
+                }
+
+                location /data4 {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/data4;
+                }
+
+                location /data3 {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/data3;
+                }
+
+                location /data2 {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/data2;
+                }
+
+                location /data {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/data;
+                }
+
+                location /describe {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/describe;
+                }
+
+                location /fct {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/fct;
+                }
+
+                location /isparql {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/isparql;
+                }
+
+                location /ontology {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/ontology;
+                }
+
+                location /page {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/page;
+                }
+
+                location /property {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/property;
+                }
+
+                location /rdfdesc {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/rdfdesc;
+                }
+
+                location /resource {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/resource;
+                }
+
+                location /services {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/services;
+                }
+
+                location /snorql {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/snorql;
+                }
+
+                location /sparql-auth {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/sparql-auth;
+                }
+
+                location /sparql {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/sparql;
+                }
+
+                location /statics {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/statics;
+                }
+
+                location /void {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/void;
+                }
+
+                location /wikicompany {
+                    proxy_set_header Host $host;
+                    proxy_set_header X-Real-IP $remote_addr;
+                    proxy_pass http://dbpedia:8890/wikicompany;
+                }
+            }
+        }
+    
 
 

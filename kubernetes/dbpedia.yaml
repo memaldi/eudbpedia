@@ -37,8 +37,9 @@ spec:
         - name: dbpedia-pvc
           persistentVolumeClaim:
             claimName: dbpedia-pvc
-        - configMap:
-          name: dbpedia-config
-          items:
-            - key: set_registry_values.sql
-              path: set_registry_values.sql
+        - name: dbpedia-config
+          configMap:
+            name: dbpedia-config
+            items:
+              - key: set_registry_values.sql
+                path: set_registry_values.sql
