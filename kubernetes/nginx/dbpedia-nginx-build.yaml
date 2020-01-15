@@ -9,6 +9,7 @@ spec:
     source:
         git:
             uri: "https://github.com/memaldi/eudbpedia/"
+            ref: "acme"
         contextDir: "kubernetes/nginx/app"
     strategy:
         sourceStrategy:

@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: acme-issue
+spec:
+  parallelism: 1
+  completions: 1
+  template:         
+    metadata:
+      name: acme-issue
+    spec:
+        containers:
+        - name: acme-issue
+          image: neilpang/acme.sh
+          args: ["--issue",  "-d", "eudbpedia.apps.openshift.deustotech.eu", "--webroot", "/nginx-root"]
+          volumeMounts:
+              - mountPath: /nginx-root
+                name: dbpedia-pvc
+                subPath: nginx-root
+        volumes:
+        - name: dbpedia-pvc
+          persistentVolumeClaim:
+            claimName: dbpedia-pvc
+        restartPolicy: OnFailure
