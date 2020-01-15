@@ -4,8 +4,8 @@ metadata:
   name: dbpedia-pvc
 spec:
   accessModes:
-  - ReadWriteOnce
+  - ReadWriteMany
   resources:
     requests:
       storage: 30Gi
-  storageClassName: cinder-hdd
+  storageClassName: glusterfs-storage

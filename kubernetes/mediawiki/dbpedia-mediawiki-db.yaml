@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: dbpedia-mediawiki-db
-          image: mysql
+          image: centos/mysql-80-centos7
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
@@ -38,7 +38,11 @@ spec:
                 secretKeyRef:
                     key: MYSQL_PASSWORD
                     name: dbpedia-secrets
-      volumeMounts:
-        - mountPath: /var/lib/mysql
-          name: dbpedia-pvc
-          subPath: mediawiki-db
+          volumeMounts:
+            - mountPath: /var/lib/mysql/data
+              name: dbpedia-pvc
+              subPath: mediawiki-db
+      volumes:
+        - name: dbpedia-pvc
+          persistentVolumeClaim:
+            claimName: dbpedia-pvc

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: dbpedia-mediawiki
-          image: mediawiki
+          image: docker-registry.default.svc:5000/eudbpedia/mediawiki:1.34.0
           volumeMounts:
             - mountPath: /var/www/html/images
               name: dbpedia-pvc
