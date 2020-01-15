@@ -4,7 +4,7 @@ metadata:
   name: dbpedia-mediawiki
 spec:
   selector:
-    app: dbpedia-mediawiki
+    name: dbpedia-mediawiki
   ports:
     - protocol: TCP
       port: 8080

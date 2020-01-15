@@ -1,22 +1,19 @@
-apiVersion: apps/v1
-kind: Deployment
+kind: "DeploymentConfig"
+apiVersion: "v1"
 metadata:
-  name: dbpedia-mediawiki
-  labels:
-    app: dbpedia-mediawiki
+  name: "dbpedia-mediawiki"
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: dbpedia-mediawiki
-  template:
+  template: 
     metadata:
       labels:
-        app: dbpedia-mediawiki
+        name: "dbpedia-mediawiki"
     spec:
       containers:
-        - name: dbpedia-mediawiki
-          image: docker-registry.default.svc:5000/eudbpedia/mediawiki:1.34.0
+        - name: "dbpedia-mediawiki"
+          image: "docker-registry.default.svc:5000/eudbpedia/mediawiki:1.34.0"
+          ports:
+            - containerPort: 8080
+              protocol: "TCP"
           volumeMounts:
             - mountPath: /var/www/html/images
               name: dbpedia-pvc
@@ -25,12 +22,28 @@ spec:
               name: dbpedia-secrets
               subPath: LocalSettings.php
       volumes:
-      - name: dbpedia-pvc
-        persistentVolumeClaim:
-          claimName: dbpedia-pvc
-      - name: dbpedia-secrets
-        secret:
-          secretName: dbpedia-secrets
-          items:
-            - key: LocalSettings.php
-              path: LocalSettings.php
+        - name: dbpedia-pvc
+          persistentVolumeClaim:
+            claimName: dbpedia-pvc
+        - name: dbpedia-secrets
+          secret:
+            secretName: dbpedia-secrets
+            items:
+              - key: LocalSettings.php
+                path: LocalSettings.php
+  replicas: 1
+  triggers:
+    - type: "ConfigChange" 
+    - type: "ImageChange" 
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - "dbpedia-mediawiki"
+        from:
+          kind: "ImageStreamTag"
+          name: "mediawiki:1.34.0"
+  strategy: 
+    type: "Rolling"
+  paused: false 
+  revisionHistoryLimit: 2 
+  minReadySeconds: 0

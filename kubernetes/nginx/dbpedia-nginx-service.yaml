@@ -4,7 +4,7 @@ metadata:
   name: dbpedia-nginx
 spec:
   selector:
-    app: dbpedia-nginx
+    name: dbpedia-nginx
   ports:
     - protocol: TCP
       port: 8080

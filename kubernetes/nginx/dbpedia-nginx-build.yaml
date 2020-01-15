@@ -1,0 +1,21 @@
+kind: "BuildConfig"
+apiVersion: "v1"
+metadata:
+    name: "nginx-build"
+spec:
+    runPolicy: "Serial"
+    triggers:
+        - type: "ImageChange"
+    source:
+        git:
+            uri: "https://github.com/memaldi/eudbpedia/"
+        contextDir: "kubernetes/nginx/app"
+    strategy:
+        sourceStrategy:
+            from:
+              kind: "DockerImage"
+              name: "centos/nginx-116-centos7:latest"
+    output: 
+        to:
+            kind: "ImageStreamTag"
+            name: "dbpedia-nginx:latest"

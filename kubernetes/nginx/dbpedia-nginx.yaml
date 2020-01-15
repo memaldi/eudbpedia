@@ -1,30 +1,32 @@
-apiVersion: apps/v1
-kind: Deployment
+kind: "DeploymentConfig"
+apiVersion: "v1"
 metadata:
-  name: dbpedia-nginx
-  labels:
-    app: dbpedia-nginx
+  name: "dbpedia-nginx"
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: dbpedia-nginx
-  template:
+  template: 
     metadata:
       labels:
-        app: dbpedia-nginx
+        name: "dbpedia-nginx"
     spec:
       containers:
-        - name: dbpedia-nginx
-          image: docker-registry.default.svc:5000/eudbpedia/dbpedia-nginx
-          # volumeMounts:
-          #   - mountPath: /etc/nginx/nginx.conf
-          #     name: dbpedia-config
-          #     subPath: nginx.conf
-      # volumes:
-      #   - name: dbpedia-config
-      #     configMap:
-      #       name: dbpedia-config
-      #       items:
-      #           - key: nginx.conf
-      #             path: nginx.conf
+        - name: "dbpedia-nginx"
+          image: "docker-registry.default.svc:5000/eudbpedia/dbpedia-nginx"
+          ports:
+            - containerPort: 8080
+              protocol: "TCP"
+  replicas: 1
+  triggers:
+    - type: "ConfigChange" 
+    - type: "ImageChange" 
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - "dbpedia-nginx"
+        from:
+          kind: "ImageStreamTag"
+          name: "dbpedia-nginx:latest"
+  strategy: 
+    type: "Rolling"
+  paused: false 
+  revisionHistoryLimit: 2 
+  minReadySeconds: 0
