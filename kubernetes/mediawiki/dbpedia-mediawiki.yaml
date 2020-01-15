@@ -15,10 +15,10 @@ spec:
             - containerPort: 8080
               protocol: "TCP"
           volumeMounts:
-            - mountPath: /var/www/html/images
+            - mountPath: /opt/app-root/src/images
               name: dbpedia-pvc
               subPath: mediawiki-images
-            - mountPath: /var/www/html/LocalSettings.php
+            - mountPath: /opt/app-root/src/LocalSettings.php
               name: dbpedia-secrets
               subPath: LocalSettings.php
       volumes:
