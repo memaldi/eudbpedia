@@ -11,12 +11,15 @@ spec:
     spec:
         containers:
         - name: acme-issue
-          image: neilpang/acme.sh
-          args: ["--issue",  "-d", "eudbpedia.apps.openshift.deustotech.eu", "--webroot", "/nginx-root"]
+          image: docker-registry.default.svc:5000/eudbpedia/openshift-acme
+          args: ["--issue",  "-d", "eudbpedia.apps.openshift.deustotech.eu", "--webroot", "/nginx-root", "--config-home", "/config", "--key-file", "/certs/server.key", "--fullchain-file", "/certs/server.crt"]
           volumeMounts:
-              - mountPath: /nginx-root
-                name: dbpedia-pvc
-                subPath: nginx-root
+            - mountPath: /nginx-root
+              name: dbpedia-pvc
+              subPath: nginx-root
+            - mountPath: /certs
+              name: dbpedia-pvc
+              subPath: certs
         volumes:
         - name: dbpedia-pvc
           persistentVolumeClaim:
