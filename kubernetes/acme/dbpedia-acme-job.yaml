@@ -12,7 +12,7 @@ spec:
         containers:
         - name: acme-issue
           image: docker-registry.default.svc:5000/eudbpedia/openshift-acme
-          args: ["--issue",  "-d", "eudbpedia.apps.openshift.deustotech.eu", "--webroot", "/nginx-root", "--config-home", "/config", "--key-file", "/certs/server.key", "--fullchain-file", "/certs/server.crt"]
+          args: ["--issue",  "-d", "eudbpedia.apps.openshift.deustotech.eu", "--webroot", "/nginx-root", "--config-home", "/config", "--key-file", "/certs/server.key", "--fullchain-file", "/certs/server.crt", "--debug", "--staging", "--force"]
           volumeMounts:
             - mountPath: /nginx-root
               name: dbpedia-pvc
@@ -20,6 +20,9 @@ spec:
             - mountPath: /certs
               name: dbpedia-pvc
               subPath: certs
+            - mountPath: /config
+              name: dbpedia-pvc
+              subPath: acme-config
         volumes:
         - name: dbpedia-pvc
           persistentVolumeClaim:
