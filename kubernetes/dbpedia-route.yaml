@@ -2,13 +2,15 @@ apiVersion: v1
 kind: Route
 metadata:
   name: eudbpedia.apps.openshift.deustotech.eu
-  annotations:
-    kubernetes.io/tls-acme: 'true'
+  # annotations:
+  #   kubernetes.io/tls-acme: 'true'
 spec:
   host: eudbpedia.apps.openshift.deustotech.eu
-  path: /
   to:
     kind: Service
     name: dbpedia-nginx
   port:
-    targetPort: 8080
+    targetPort: 8443
+  tls:
+    termination: passthrough
+    insecureEdgeTerminationPolicy: Redirect

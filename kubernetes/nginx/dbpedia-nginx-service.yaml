@@ -7,6 +7,6 @@ spec:
     name: dbpedia-nginx
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
+      port: 8443
+      targetPort: 8443
       name: dbpedia-nginx
