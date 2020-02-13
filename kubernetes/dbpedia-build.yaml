@@ -1,0 +1,18 @@
+kind: "BuildConfig"
+apiVersion: "v1"
+metadata:
+    name: "dbpedia-build"
+spec:
+    runPolicy: "Serial"
+    triggers:
+        - type: "ImageChange"
+    source:
+        git:
+            uri: "https://github.com/memaldi/eudbpedia/"
+    strategy:
+        dockerStrategy:
+            dockerfilePath: virtuoso/Dockerfile
+    output: 
+        to:
+            kind: "ImageStreamTag"
+            name: "virtuoso"

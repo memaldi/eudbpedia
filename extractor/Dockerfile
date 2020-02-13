@@ -11,7 +11,7 @@ WORKDIR /dbpedia
 RUN git clone https://github.com/dbpedia/extraction-framework.git
 WORKDIR /dbpedia/extraction-framework
 
-RUN mvn clean install
+RUN chmod -R a+rwx /dbpedia
 
 ADD entrypoint.sh /dbpedia/entrypoint.sh
 ENTRYPOINT [ "/dbpedia/entrypoint.sh" ]

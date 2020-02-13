@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: dbpedia-extractor
-          image: memaldi/eudbpedia-extractor
+          image: memaldi/eudbpedia-extractor:0.0.7
           volumeMounts:
             - mountPath: /dbpedia/dump
               name: dbpedia-pvc

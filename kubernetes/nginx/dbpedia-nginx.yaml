@@ -10,7 +10,7 @@ spec:
     spec:
       containers:
         - name: "dbpedia-nginx"
-          image: "docker-registry.default.svc:5000/eudbpedia/dbpedia-nginx"
+          image: "docker-registry-default.apps.openshift.deustotech.eu/eudbpedia/dbpedia-nginx"
           ports:
             - containerPort: 8443
               protocol: "TCP"

@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: dbpedia-importer
-          image: dbpedia/virtuoso
+          image: memaldi/eudbpedia-virtuoso:0.0.2
           command: ['/usr/local/sbin/start.sh']
           args: ['import', 'http://eu.dbpedia.org']
           volumeMounts:
@@ -24,7 +24,7 @@ spec:
               subPath: db
             - mountPath: /import
               name: dbpedia-pvc
-              subPath: dump
+              subPath: triples
       restartPolicy: Never
       volumes:
         - configMap:

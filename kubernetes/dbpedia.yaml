@@ -1,22 +1,16 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: DeploymentConfig
 metadata:
   name: dbpedia
-  labels:
-    app: dbpedia
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: dbpedia
   template:
     metadata:
-      labels:
-        app: dbpedia
+      labels: 
+        name: dbpedia
     spec:
       containers:
         - name: dbpedia
-          image: dbpedia/virtuoso
+          image: docker-registry-default.apps.openshift.deustotech.eu/eudbpedia/virtuoso
           env:
             - name: NumberOfBuffers
               valueFrom:
@@ -32,7 +26,7 @@ spec:
               subPath: set_registry_values.sql
             - mountPath: /import
               name: dbpedia-pvc
-              subPath: dump
+              subPath: triples
       volumes:
         - name: dbpedia-pvc
           persistentVolumeClaim:
@@ -43,3 +37,19 @@ spec:
             items:
               - key: set_registry_values.sql
                 path: set_registry_values.sql
+    replicas: 1
+    triggers:
+      - type: "ConfigChange" 
+      - type: "ImageChange" 
+        imageChangeParams:
+          automatic: true
+          containerNames:
+            - "dbpedia"
+          from:
+            kind: "ImageStreamTag"
+            name: "virtuoso"
+    strategy: 
+      type: "Rolling"
+    paused: false 
+    revisionHistoryLimit: 2 
+    minReadySeconds: 0
